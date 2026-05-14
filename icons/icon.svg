@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0f2035"/>
+  <rect x="40" y="40" width="512" height="512" rx="80" fill="#0b1622"/>
+  <rect width="512" height="512" rx="80" fill="#112540"/>
+  <!-- 배경 그라데이션 -->
+  <defs>
+    <radialGradient id="g1" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#2a7de1" stop-opacity=".25"/>
+      <stop offset="100%" stop-color="#112540" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" fill="url(#g1)"/>
+  <!-- R 텍스트 -->
+  <text x="256" y="310" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="240" fill="#ffffff" letter-spacing="-8">R</text>
+  <!-- 하단 라인 -->
+  <rect x="80" y="390" width="352" height="6" rx="3" fill="#2a7de1" opacity=".8"/>
+  <!-- 점 -->
+  <circle cx="256" cy="430" r="12" fill="#2a7de1"/>
+</svg>

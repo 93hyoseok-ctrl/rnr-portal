@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>TECHNICAL DESIGN TEAM</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0d1a2b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RNR TDT" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b1622;
+      --surface: #0f2035;
+      --card: #112540;
+      --card-hover: #1a3558;
+      --border: #1e3a5f;
+      --text: #e8f0f8;
+      --text-muted: #7a9bb5;
+      --accent: #2a7de1;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+    }
+
+    /* ── 상단 메타 바 ── */
+    .meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .meta-left { display: flex; flex-direction: column; gap: 1px; }
+    .meta-version { font-weight: 600; letter-spacing: .5px; }
+    .meta-date { opacity: .8; }
+    .meta-logo {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+    .meta-logo span { color: var(--accent); }
+
+    /* ── 타이틀 헤더 ── */
+    .title-bar {
+      background: linear-gradient(135deg, #0f2a48 0%, #1a3d68 100%);
+      text-align: center;
+      padding: 16px 20px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .title-bar h1 {
+      font-size: clamp(15px, 4.5vw, 20px);
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 1px 6px rgba(42,125,225,.4);
+    }
+
+    /* ── 그리드 ── */
+    .grid-wrap {
+      flex: 1;
+      padding: 20px 16px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-content: start;
+    }
+
+    /* ── 카드 ── */
+    .card {
+      position: relative;
+      display: block;
+      text-decoration: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      aspect-ratio: 1 / .85;
+      overflow: hidden;
+      transition: transform .15s, background .15s, box-shadow .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card:active {
+      transform: scale(.96);
+      background: var(--card-hover);
+      box-shadow: 0 0 18px rgba(42,125,225,.25);
+    }
+
+    /* 배경 패턴 */
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 30%, rgba(42,125,225,.12) 0%, transparent 65%),
+        radial-gradient(ellipse at 20% 70%, rgba(42,125,225,.07) 0%, transparent 60%);
+    }
+
+    .card-icon {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 32px;
+      opacity: .55;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,.4));
+    }
+
+    .card-label {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      padding: 10px 14px 12px;
+      background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 100%);
+      text-align: right;
+    }
+    .card-label .en {
+      display: block;
+      font-size: clamp(12px, 3.5vw, 15px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .card-label .ko {
+      display: block;
+      font-size: clamp(10px, 2.5vw, 12px);
+      color: rgba(255,255,255,.55);
+      margin-top: 2px;
+      letter-spacing: .3px;
+    }
+
+    /* 잠금 뱃지 */
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 11px;
+      background: rgba(42,125,225,.3);
+      border: 1px solid rgba(42,125,225,.5);
+      border-radius: 4px;
+      padding: 2px 6px;
+      color: #8bbfec;
+      letter-spacing: .5px;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      padding: 14px 16px 20px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: .7;
+      border-top: 1px solid var(--border);
+      line-height: 1.6;
+    }
+
+    /* ── 설치 토스트 (PWA) ── */
+    #install-toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a3d68;
+      border: 1px solid var(--accent);
+      border-radius: 24px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: #fff;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+      z-index: 100;
+      animation: fadeUp .3s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="meta-bar">
+    <div class="meta-left">
+      <span class="meta-version">Version : 1.0.0</span>
+      <span class="meta-date" id="meta-date"></span>
+    </div>
+    <div class="meta-logo">RNR<span>●</span>TDT</div>
+  </div>
+
+  <div class="title-bar">
+    <h1>TECHNICAL DESIGN TEAM</h1>
+  </div>
+
+  <div class="grid-wrap">
+
+    <a class="card" href="https://cinema-schedule-efn.pages.dev" target="_blank" rel="noopener">
+      <div class="card-icon">📅</div>
+      <div class="card-label">
+        <span class="en">SCHEDULE</span>
+        <span class="ko">근무일정표</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://rnr-inspection.pages.dev" target="_blank" rel="noopener">
+      <div class="card-icon">🔧</div>
+      <div class="card-badge">🔒 AUTH</div>
+      <div class="card-label">
+        <span class="en">INSPECTION</span>
+        <span class="ko">정기점검</span>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    © 2026 RNR Technical Design Team. For internal use only.<br>
+    Unauthorized access is strictly prohibited.
+  </footer>
+
+  <div id="install-toast">+ 홈화면에 앱으로 설치하기</div>
+
+  <script>
+    // 날짜 표시
+    const d = new Date()
+    document.getElementById('meta-date').textContent =
+      `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ` +
+      `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+
+    // Service Worker 등록
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {})
+    }
+
+    // PWA 설치 프롬프트
+    let deferredPrompt
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault()
+      deferredPrompt = e
+      const toast = document.getElementById('install-toast')
+      toast.style.display = 'block'
+      toast.addEventListener('click', () => {
+        deferredPrompt.prompt()
+        deferredPrompt.userChoice.then(() => { toast.style.display = 'none' })
+      })
+    })
+  </script>
+</body>
+</html>

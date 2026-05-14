@@ -1,0 +1,14 @@
+{
+  "name": "RNR Technical Design Team",
+  "short_name": "RNR TDT",
+  "description": "테크니컬디자인팀 내부 포털",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1622",
+  "theme_color": "#0d1a2b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
