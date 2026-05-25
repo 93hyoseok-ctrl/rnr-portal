@@ -1,4 +1,4 @@
-const CACHE = 'rnr-portal-v1'
+const CACHE = 'rnr-portal-v2'
 const ASSETS = ['/', '/index.html', '/manifest.json']
 
 self.addEventListener('install', e => {
