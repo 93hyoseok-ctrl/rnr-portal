@@ -263,6 +263,37 @@
     Unauthorized access is strictly prohibited.
   </footer>
 
+  <!-- 오프라인 사용 안내 팝업 -->
+  <div id="offline-guide-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#0f2035;border:1px solid #1e3a5f;border-radius:16px;max-width:420px;width:100%;padding:28px 24px;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+      <div style="font-size:28px;text-align:center;margin-bottom:12px">📲</div>
+      <div style="font-size:16px;font-weight:700;color:#e8f0f8;text-align:center;margin-bottom:16px">오프라인 사용을 위한 앱 설치 안내</div>
+      <div style="font-size:13px;color:#b0c8e0;line-height:1.8;margin-bottom:20px">
+        현장에서 인터넷 없이 포털 및 정기점검을 사용하려면<br>
+        아래 방법으로 앱을 설치해주세요.<br><br>
+        <b style="color:#e8f0f8">📱 아이폰 / 아이패드</b><br>
+        ① Safari로 <b style="color:#2a7de1">https://rnr-portal.pages.dev</b> 접속<br>
+        ② 하단 공유 버튼 <b>( ⬆︎ )</b> 탭<br>
+        ③ <b>"홈 화면에 추가"</b> 선택<br><br>
+        <b style="color:#e8f0f8">🤖 안드로이드</b><br>
+        ① Chrome으로 <b style="color:#2a7de1">https://rnr-portal.pages.dev</b> 접속<br>
+        ② 주소창 오른쪽 메뉴 <b>( ⋮ )</b> 탭<br>
+        ③ <b>"앱 설치"</b> 또는 <b>"홈 화면에 추가"</b> 선택<br><br>
+        <b style="color:#e8f0f8">💻 노트북 (Chrome)</b><br>
+        ① Chrome으로 <b style="color:#2a7de1">https://rnr-portal.pages.dev</b> 접속<br>
+        ② 주소창 오른쪽 설치 아이콘 <b>( ⊕ )</b> 클릭<br>
+        ③ <b>"설치"</b> 클릭<br><br>
+        설치 후 홈 화면 아이콘으로 접속하면<br>
+        <b style="color:#4ade80">인터넷 없이도 포털과 정기점검 사용 가능합니다.</b>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <input type="checkbox" id="offline-guide-no-show" style="width:16px;height:16px;cursor:pointer;accent-color:#2a7de1">
+        <label for="offline-guide-no-show" style="font-size:13px;color:#7a9bb5;cursor:pointer">다시 보지 않기</label>
+      </div>
+      <button onclick="closeOfflineGuide()" style="width:100%;padding:12px;background:#2a7de1;border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:700;cursor:pointer">확인</button>
+    </div>
+  </div>
+
   <script>
     // 날짜 표시
     const d = new Date()
@@ -273,6 +304,17 @@
     // Service Worker 등록
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {})
+    }
+
+    // 오프라인 안내 팝업
+    function closeOfflineGuide(){
+      if(document.getElementById('offline-guide-no-show').checked){
+        localStorage.setItem('rnr_portal_guide_dismissed','1');
+      }
+      document.getElementById('offline-guide-overlay').style.display='none';
+    }
+    if(!localStorage.getItem('rnr_portal_guide_dismissed')){
+      document.getElementById('offline-guide-overlay').style.display='flex';
     }
 
     const banner   = document.getElementById('install-banner')
