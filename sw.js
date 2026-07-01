@@ -1,4 +1,4 @@
-const CACHE = 'rnr-portal-v4';
+const CACHE = 'rnr-portal-v5';
 
 const APP_SHELL = [
   '/',
@@ -21,6 +21,8 @@ self.addEventListener('activate', e => {
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
+    .then(() => self.clients.matchAll({type:'window'}))
+    .then(clients => Promise.all(clients.map(c => { try{return c.navigate(c.url);}catch(e){return Promise.resolve();} })))
   );
 });
 
